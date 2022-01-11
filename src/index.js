@@ -5,9 +5,12 @@ var app = express();
 const https = require("https");
 const path = require("path");
 const fs = require("fs");
+const env=require('dotenv')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+env.config();
+
 var categoryRouter = require("./router/categoryrouter");
 var itemRouter = require("./router/itemrouter");
 var levelRouter = require("./router/levelrouter");
@@ -34,10 +37,8 @@ app.use("/api", stockRoute);
 app.use("/api", itemLedgerRoute);
 app.use("/api", reportRoute);
 app.use("/api", locationwiserouter);
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-const PORT = 8000;
+
+const PORT = process.env.PORT || 8000;
 https
   .createServer(
     {
@@ -48,3 +49,7 @@ https
     app
   )
   .listen(PORT);
+  app.get("/", (req, res) => {
+    res.send("Hello World");
+    console.log("app is listening")
+  });
